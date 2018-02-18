@@ -12,7 +12,7 @@ const typeOf = value => {
   }
 }
 
-export default class TypedArray extends Array {
+class TypedArray extends Array {
   constructor(type, ...args) {
     super(...args)
     args.forEach(val => {
@@ -22,6 +22,10 @@ export default class TypedArray extends Array {
     })
     Object.defineProperty(this, 'type', { writable: false, value: type })
     Object.defineProperty(this, 'values', { get: () => [...args] })
+  }
+
+  static get name() {
+    return `TypedArray<T>`
   }
 
   *[Symbol.iterator]() {
@@ -38,11 +42,11 @@ export default class TypedArray extends Array {
   }
 
   get [Symbol.toStringTag]() {
-    return `TypedArray<${this.type.name}>`
+    return this.toString()
   }
 
   toString() {
-    return `TypedArray<${this.type.name}>${this.toString()}`
+    return `TypedArray<T>`
   }
 
   toJSON() {
