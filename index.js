@@ -13,14 +13,14 @@ const typeOf = value => {
 }
 
 export default class TypedArray extends Array {
-  constructor(types, ...args) {
+  constructor(type, ...args) {
     super(...args)
     args.forEach(val => {
-      if (typeOf(val) !== types.name.toLowerCase()) {
-        throw new Error(`Unexpected type ${types.name} in TypedArray<${types.name}>`)
+      if (typeOf(val) !== type.name.toLowerCase()) {
+        throw new Error(`Unexpected type ${type.name} in TypedArray<${type.name}>`)
       }
     })
-    this.types = types
+    Object.defineProperty(this, 'type', { writable: false, value: type })
     Object.defineProperty(this, 'values', { get: () => [...args] })
   }
 
@@ -38,11 +38,11 @@ export default class TypedArray extends Array {
   }
 
   get [Symbol.toStringTag]() {
-    return `TypedArray<${this.types.name}>`
+    return `TypedArray<${this.type.name}>`
   }
 
   toString() {
-    return `TypedArray<${this.types.name}>${this.toString()}`
+    return `TypedArray<${this.type.name}>${this.toString()}`
   }
 
   toJSON() {
